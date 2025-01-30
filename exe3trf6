@@ -1,4 +1,5 @@
 # Função para ler os alunos e suas notas de um ficheiro
+#Olá
 def ler_alunos_do_ficheiro(ficheiro_nome):
     alunos = {}
     try:
