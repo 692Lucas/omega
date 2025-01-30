@@ -1,0 +1,53 @@
+# Função para ler os alunos e suas notas de um ficheiro
+def ler_alunos_do_ficheiro(ficheiro_nome):
+    alunos = {}
+    try:
+        with open(ficheiro_nome, 'r', encoding='utf-8') as ficheiro:
+            for linha in ficheiro:
+                linha = linha.strip()  # Remove espaços extras e quebras de linha
+                if linha:  # Verifica se a linha não está vazia
+                    try:
+                        nome, nota = linha.split(', ')  # Divide o nome e a nota
+                        alunos[nome] = float(nota)  # Armazena o nome e a nota no dicionário
+                    except ValueError:
+                        print(f"Erro ao processar a linha: {linha}. Verifique o formato.")
+    except FileNotFoundError:
+        print(f"Erro: O ficheiro '{ficheiro_nome}' não foi encontrado.")
+    return alunos  # Retorna o dicionário de alunos e notas
+# Função para calcular a média das notas
+def calcular_media(alunos):
+    if len(alunos) == 0:
+        return 0
+    return sum(alunos.values()) / len(alunos)
+# Função para identificar os alunos com a melhor nota
+def melhores_notas(alunos):
+    maior_nota = max(alunos.values(), default=0)  # Encontra a maior nota
+    melhores = [nome for nome, nota in alunos.items() if nota == maior_nota]  # Encontra os alunos com a maior nota
+    return melhores, maior_nota
+# Função para identificar alunos aprovados e reprovados
+def aprovados_reprovados(alunos, media_aprovacao=10):
+    aprovados = [nome for nome, nota in alunos.items() if nota >= media_aprovacao]
+    reprovados = [nome for nome, nota in alunos.items() if nota < media_aprovacao]
+    return aprovados, reprovados
+# Função principal para executar o programa
+def main():
+    # Solicita o nome do ficheiro ao utilizador
+    ficheiro_nome = input("Digite o nome do ficheiro (ex: alunos.txt): ").strip()    
+    # Lê os alunos e suas notas do ficheiro
+    alunos = ler_alunos_do_ficheiro(ficheiro_nome)    
+    if alunos:
+        # Calcula a média das notas
+        media = calcular_media(alunos)
+        print(f"\nMédia das notas: {media:.2f}")
+        # Exibe os alunos com a melhor nota
+        melhores, maior_nota = melhores_notas(alunos)
+        print(f"\nAluno(s) com a melhor nota ({maior_nota}): {', '.join(melhores)}")
+        # Exibe os alunos aprovados e reprovados
+        aprovados, reprovados = aprovados_reprovados(alunos)
+        print(f"\nAlunos Aprovados: {', '.join(aprovados)}")
+        print(f"Alunos Reprovados: {', '.join(reprovados)}")
+    else:
+        print("Nenhum aluno encontrado ou erro na leitura do ficheiro.")
+# Chama a função principal para rodar o programa
+if __name__ == "__main__":
+    main()
